@@ -5,39 +5,33 @@ let canClick = true;
 let gameTimer;
 let timeRemaining = 120;
 
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-const soundBuffers = {};
-
-// Preload sounds for better performance
-const preloadSounds = () => {
-  const sounds = [
-    { id: 'clickSound', url: './mouse-click-sound-233951.mp3' },
-    { id: 'matchSound', url: './bubblepop-254773.mp3' },
-    { id: 'winSound', url: './success-fanfare-trumpets-6185.mp3' },
-    { id: 'envelopeSound', url: './envelope-open-sound.mp3' },
-    { id: 'tickSound', url: './clock-tick.mp3' },
-    { id: 'timeoutSound', url: './timeout-buzzer.mp3' },
-  ];
-
-  sounds.forEach(sound => {
-    fetch(sound.url)
-      .then(response => response.arrayBuffer())
-      .then(data => audioContext.decodeAudioData(data))
-      .then(buffer => {
-        soundBuffers[sound.id] = buffer;
-      });
-  });
-};
-
-// Play sound using preloaded buffers
+// Function to play sounds using HTML5 audio elements
 const playSound = (soundId) => {
-  if (soundBuffers[soundId]) {
-    const source = audioContext.createBufferSource();
-    source.buffer = soundBuffers[soundId];
-    source.connect(audioContext.destination);
-    source.start(0);
+  try {
+    const audioElement = document.getElementById(soundId);
+    if (audioElement) {
+      audioElement.currentTime = 0; // Reset to start
+      audioElement.play().catch(e => console.error(`Error playing ${soundId}:`, e));
+    }
+  } catch (error) {
+    console.error(`Error playing sound ${soundId}:`, error);
   }
 };
+
+// Make sure audio can play on iOS and other mobile browsers
+function setupAudioForMobile() {
+  document.addEventListener('touchstart', function() {
+    // Create and play a silent sound to unlock audio on iOS
+    const silentSound = document.createElement('audio');
+    silentSound.setAttribute('src', 'data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgAAAAA=');
+    silentSound.volume = 0.01; // Nearly silent
+    silentSound.play().then(() => {
+      console.log("Audio unlocked for mobile");
+    }).catch(e => {
+      console.log("Failed to unlock audio:", e);
+    });
+  }, {once: true});
+}
 
 function shuffleArray(arr) {
   return arr.sort(() => Math.random() - 0.5);
@@ -47,13 +41,12 @@ function startGame() {
   const gameBoard = document.getElementById('gameBoard');
   const timerContainer = document.getElementById('timerContainer');
   const timerText = document.getElementById('timerText');
-  const instructionsBox = document.getElementById('instructionsBox'); // Reference to the instructions box
+  const instructionsBox = document.getElementById('instructionsBox');
   
   // Hide the instructions window
   instructionsBox.style.display = 'none';
   
   // Reset game state
-  document.getElementById('audioContainer').style.display = 'none';
   document.getElementById('birthdayMessage').style.display = 'none';
   gameBoard.style.display = 'flex';
   gameBoard.innerHTML = '';
@@ -82,7 +75,6 @@ function startGame() {
 function startCountdown() {
   // Clear any existing timer
   clearInterval(gameTimer);
-  
   gameTimer = setInterval(() => {
     timeRemaining--;
     const timerText = document.getElementById('timerText');
@@ -92,8 +84,7 @@ function startCountdown() {
     // Add warning style when time is running low
     if (timeRemaining <= 10) {
       timerContainer.classList.add('timer-warning');
-      
-      // Optional: play a tick sound when time is low
+      // Play a tick sound when time is low
       if (timeRemaining <= 5) {
         playSound('tickSound');
       }
@@ -117,12 +108,12 @@ function endGame(won) {
     celebrateWin();
   } else {
     playSound('timeoutSound');
-    
     document.getElementById('gameBoard').style.display = 'none';
-    document.getElementById('instructionsBox').style.opacity = '1';
     
-    // Update instructions to show game over message
+    // Show and update instructions with game over message
     const instructionsBox = document.getElementById('instructionsBox');
+    instructionsBox.style.display = 'block';
+    instructionsBox.style.opacity = '1';
     instructionsBox.innerHTML = `
       <h1>Time's Up!</h1>
       <p>You ran out of time. Would you like to try again?</p>
@@ -133,6 +124,8 @@ function endGame(won) {
 
 function handleTileClick(tile) {
   if (!canClick || tile.innerText !== '') return;
+
+  // Play click sound
   playSound('clickSound');
 
   tile.innerText = tile.dataset.symbol;
@@ -142,6 +135,7 @@ function handleTileClick(tile) {
   } else {
     canClick = false;
     if (firstTile.dataset.symbol === tile.dataset.symbol && firstTile !== tile) {
+      // Play match sound
       playSound('matchSound');
       firstTile = null;
       canClick = true;
@@ -171,15 +165,14 @@ function celebrateWin() {
   document.getElementById('gameBoard').style.display = 'none';
   document.getElementById('instructionsBox').style.opacity = '0';
   
+  // Play win and envelope sounds
   playSound('winSound');
   playSound('envelopeSound');
-  
   createConfetti();
   showBirthdayMessage();
   
+  // Play the Bowie message audio
   setTimeout(() => {
-    const audioContainer = document.getElementById('audioContainer');
-    audioContainer.classList.add('reveal');
     const audioPlayer = document.getElementById('audioPlayer');
     audioPlayer.load();
     audioPlayer.play().catch(e => console.error("Audio play error:", e));
@@ -206,7 +199,6 @@ function createConfetti() {
     confetti.style.top = -20 + 'px';
     confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
     confetti.style.opacity = Math.random() * 0.7 + 0.3;
-    
     confettiContainer.appendChild(confetti);
     
     const duration = Math.random() * 3 + 2;
@@ -227,5 +219,7 @@ function createConfetti() {
   }
 }
 
-// Preload sounds on page load
-window.addEventListener('DOMContentLoaded', preloadSounds);
+// Initialize audio for mobile devices
+window.addEventListener('DOMContentLoaded', () => {
+  setupAudioForMobile();
+});

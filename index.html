@@ -1,49 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Matching Reveal Game</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Matching Reveal Game</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="instructions" id="instructionsBox">
-    <h1>Welcome to the Matching Game!</h1>
-    <p>Match the tiles to reveal a surprise!</p>
-    <p>You have 2 minutes to complete the challenge.</p>
-    <button class="start-button" onclick="startGame()">Start Game</button>
-  </div>
-  <div class="game-board" id="gameBoard"></div>
-  
-  <div class="timer-container" id="timerContainer">
-    <div class="timer-text" id="timerText">60</div>
-  </div>
-  
-  <div class="audio-container" id="audioContainer">
-    <h3>Your special message is playing!</h3>
-    <audio id="audioPlayer" class="audio-player" controls>
-      <source src="./bowiemessage.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-    </audio>
-  </div>
+<div class="instructions" id="instructionsBox">
+<h1>Welcome to the Matching Game!</h1>
+<p>Match the tiles to reveal a surprise!</p>
+<p>You have 2 minutes to complete the challenge.</p>
+<button class="start-button" onclick="startGame()">Start Game</button>
+</div>
+<div class="game-board" id="gameBoard"></div>
+<div class="timer-container" id="timerContainer">
+<div class="timer-text" id="timerText">60</div>
+</div>
 
-  <!-- Birthday message with enhanced visibility -->
-  <div class="birthday-message" id="birthdayMessage">
-    <div class="birthday-text">
-      Happy Birthday Sarah!<br>Love Jane ♡
-    </div>
-  </div>  
-  
-  <div class="confetti" id="confetti"></div>
-  
-  <audio id="clickSound" src="./mouse-click-sound-233951.mp3" preload="auto"></audio>
-  <audio id="matchSound" src="./bubblepop-254773.mp3" preload="auto"></audio>
-  <audio id="winSound" src="./success-fanfare-trumpets-6185.mp3" preload="auto"></audio>
-  <audio id="envelopeSound" src="./envelope-open-sound.mp3" preload="auto"></audio>
-  <audio id="tickSound" src="./clock-tick.mp3" preload="auto"></audio>
-  <audio id="timeoutSound" src="./timeout-buzzer.mp3" preload="auto"></audio>
+<!-- Hidden audio player (no controls attribute) -->
+<audio id="audioPlayer" class="audio-player">
+<source src="./bowiemessage.mp3" type="audio/mpeg">
+Your browser does not support the audio element.
+</audio>
 
-  <script src="script.js"></script>
+<!-- Birthday message with enhanced visibility -->
+<div class="birthday-message" id="birthdayMessage">
+<div class="birthday-text">
+ Happy Birthday Sarah!<br>Love Jane ♡
+</div>
+</div>
+<div class="confetti" id="confetti"></div>
+<audio id="clickSound" src="./mouse-click-sound-233951.mp3" preload="auto"></audio>
+<audio id="matchSound" src="./bubblepop-254773.mp3" preload="auto"></audio>
+<audio id="winSound" src="./success-fanfare-trumpets-6185.mp3" preload="auto"></audio>
+<audio id="envelopeSound" src="./envelope-open-sound.mp3" preload="auto"></audio>
+<audio id="tickSound" src="./clock-tick.mp3" preload="auto"></audio>
+<audio id="timeoutSound" src="./timeout-buzzer.mp3" preload="auto"></audio>
+<script src="script.js"></script>
 </body>
 </html>
